@@ -16,7 +16,7 @@ generateTemplate(); // generate template on startup
 const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'kunal@123',
+  password: 'root@123',
   database: 'portal'
 });
 

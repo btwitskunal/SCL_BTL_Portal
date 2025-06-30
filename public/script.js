@@ -5,9 +5,11 @@ const deleteBtn = document.getElementById('delete-btn');
 const messageBox = document.getElementById('messageBox');
 const dropArea = document.getElementById('drop-area');
 const spinner = document.getElementById('spinner');
-const previewSection = document.getElementById('preview');
-const previewTable = document.getElementById('previewTable');
 const uploadForm = document.getElementById('uploadForm');
+const previewBtn = document.getElementById('previewBtn');
+const previewModal = document.getElementById('previewModal');
+const closeModal = document.getElementById('closeModal');
+const previewTable = document.getElementById('previewTable');
 
 let previewHasErrors = false;
 let metadata = {};
@@ -23,8 +25,8 @@ fileElem.addEventListener('change', () => {
     const file = fileElem.files[0];
     fileName.textContent = file.name;
     fileInfo.classList.remove('hidden');
+    previewBtn.classList.remove('hidden');
     clearMessages();
-    previewExcel(file);
   }
 });
 
@@ -33,7 +35,7 @@ deleteBtn.addEventListener('click', () => {
   fileElem.value = '';
   fileInfo.classList.add('hidden');
   fileName.textContent = '';
-  previewSection.classList.add('hidden');
+  previewBtn.classList.add('hidden');
   clearMessages();
 });
 
@@ -81,7 +83,7 @@ uploadForm.addEventListener('submit', async (e) => {
     fileElem.value = '';
     fileInfo.classList.add('hidden');
     fileName.textContent = '';
-    previewSection.classList.add('hidden');
+    previewBtn.classList.add('hidden');
 
   } catch (err) {
     spinner.classList.add('hidden');
@@ -114,10 +116,32 @@ dropArea.addEventListener('drop', (e) => {
     fileElem.files = files;
     fileName.textContent = files[0].name;
     fileInfo.classList.remove('hidden');
+    previewBtn.classList.remove('hidden');
     clearMessages();
-    previewExcel(files[0]);
   } else {
     showMessage('Only Excel files (.xlsx, .xls) are allowed.', 'error');
+  }
+});
+
+// 👀 Preview in Modal
+previewBtn.addEventListener('click', () => {
+  const file = fileElem.files[0];
+  if (file) {
+    previewExcel(file);
+    previewModal.classList.remove('hidden');
+    previewModal.style.display = 'block';
+  }
+});
+
+closeModal.addEventListener('click', () => {
+  previewModal.classList.add('hidden');
+  previewModal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === previewModal) {
+    previewModal.classList.add('hidden');
+    previewModal.style.display = 'none';
   }
 });
 
@@ -181,8 +205,6 @@ function previewExcel(file) {
       });
       previewTable.appendChild(tr);
     });
-
-    previewSection.classList.remove('hidden');
   };
   reader.readAsArrayBuffer(file);
 }
