@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Uploaded Entries</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <header class="portal-header">
+    <h1>📊 Uploaded Entries Dashboard</h1>
+    <a href="/" class="template-btn">⬅ Back to Upload</a>
+  </header>
+
+  <div class="page-bg">
+    <table id="uploadTable">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function fetchUploads() {
+      const res = await fetch('/admin/uploads');
+      const data = await res.json();
+
+      if (data.length === 0) {
+        document.getElementById('uploadTable').innerHTML = '<p>No uploads found.</p>';
+        return;
+      }
+
+      const headers = Object.keys(data[0]);
+      const headRow = document.createElement('tr');
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headRow.appendChild(th);
+      });
+      document.getElementById('tableHead').appendChild(headRow);
+
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(header => {
+          const td = document.createElement('td');
+          td.textContent = row[header];
+          tr.appendChild(td);
+        });
+        document.getElementById('tableBody').appendChild(tr);
+      });
+    }
+
+    fetchUploads();
+  </script>
+</body>
+</html>

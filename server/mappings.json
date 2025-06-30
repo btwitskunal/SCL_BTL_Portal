@@ -1,0 +1,10 @@
+{
+  "Shop Sign": {
+    "attributes": ["GSB", "NLB", "ACP", "Shop Hording"],
+    "uom": "Sqft"
+  },
+  "POP / Give Away": {
+    "attributes": ["Cap", "Key Chain", "Pad", "Pen", "Other"],
+    "uom": "No"
+  }
+}

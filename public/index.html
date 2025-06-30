@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Files</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+  <header class="portal-header">
+    <img src="images/shree-logo.png" alt="Shree Cement Logo" class="portal-logo" />
+    <h1 class="portal-title">BTL Marketing Execution Portal</h1>
+    <a href="template.xlsx" class="template-btn" download>⬇ Download Template</a>
+  </header>
+
+  <div class="page-bg">
+    <div class="upload-modal slide-in">
+      <button class="close-btn" onclick="resetUI()">&#10006;</button>
+      <h2>Upload Files</h2>
+
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div id="drop-area" class="drop-zone">
+          <img src="images/upload-icon.svg" alt="Upload" class="upload-icon" />
+          <p><strong>Drag and drop files here</strong></p>
+          <p class="subtext">
+            Supported formats: xlsx, xls<br />Maximum file size: 25MB
+          </p>
+          <input type="file" id="fileElem" name="excelFile" accept=".xlsx,.xls" hidden />
+        </div>
+
+        <p class="or">or</p>
+
+        <div class="sources">
+          <label class="source" for="fileElem">
+            <img src="images/computer.png" alt="Computer Icon" />
+            <span>My Computer</span>
+          </label>
+          <div class="source disabled">
+            <img src="images/gdrive.png" alt="Google Drive Icon" />
+            <span>Google Drive</span>
+          </div>
+          <div class="source disabled">
+            <img src="images/onedrive.png" alt="OneDrive Icon" />
+            <span>One Drive</span>
+          </div>
+        </div>
+
+        <div id="file-info" class="hidden">
+          <p><strong>Selected File:</strong> <span id="file-name"></span></p>
+          <button type="button" id="delete-btn">🗑️ Remove</button>
+        </div>
+
+        <div class="buttons">
+          <button type="button" class="cancel-btn" onclick="resetUI()">Cancel</button>
+          <button type="submit" class="done-btn">Done</button>
+        </div>
+      </form>
+
+      <div id="spinner" class="hidden">Uploading...</div>
+
+      <div id="messageBox" class="hidden"></div>
+
+      <div id="preview" class="hidden">
+        <h3>🔍 Excel Preview</h3>
+        <table id="previewTable"></table>
+      </div>
+
+      <div id="successCheck" class="hidden success-check">
+        <span>&#10003;</span> File uploaded successfully!
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "excel-upload-backend",
+  "version": "1.0.0",
+  "description": "Dynamic Excel Upload Backend using Node.js",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "fs-extra": "^11.3.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.14.1",
+    "xlsx": "^0.18.5",
+    "xlsx-populate": "^1.21.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
