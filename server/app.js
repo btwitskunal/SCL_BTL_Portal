@@ -73,11 +73,15 @@ app.post('/upload', upload.single('excelFile'), (req, res) => {
       if (!valid) {
         errorMsg += `Invalid Element '${Element}'. `;
       } else {
-        if (valid.attributes.length && !valid.attributes.includes(Attribute)) {
-          errorMsg += `Invalid Attribute '${Attribute}' for '${Element}'. `;
+        if (Array.isArray(valid.attributes) && valid.attributes.length > 0) {
+          if (!valid.attributes.includes(Attribute)) {
+            errorMsg += `Invalid Attribute '${Attribute}' for '${Element}'. `;
+          }
         }
-        if (valid.uom && UOM !== valid.uom) {
-          errorMsg += `UOM must be '${valid.uom}' for '${Element}'. `;
+        if (valid.uom && valid.uom.trim() !== "") {
+          if (UOM !== valid.uom) {
+            errorMsg += `UOM must be '${valid.uom}' for '${Element}'. `;
+          }
         }
       }
 

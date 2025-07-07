@@ -225,3 +225,55 @@ function clearMessages() {
   messageBox.classList.remove('error', 'success');
   messageBox.innerHTML = '';
 }
+
+//
+function previewExcel(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    previewTable.innerHTML = '';
+    previewHasErrors = false;
+
+    let headers = json[0] || [];
+    const bodyRows = json.slice(1);
+
+    // Ensure new columns are included
+    if (!headers.includes("Error Description")) headers.push("Error Description");
+    if (!headers.includes("Suggested Correction")) headers.push("Suggested Correction");
+
+    const thead = document.createElement('tr');
+    headers.forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      thead.appendChild(th);
+    });
+    previewTable.appendChild(thead);
+
+    bodyRows.forEach((row) => {
+      const tr = document.createElement('tr');
+      headers.forEach((key, colIndex) => {
+        const td = document.createElement('td');
+        const val = row[colIndex] ?? '';
+        td.textContent = val;
+
+        if (key === 'Error Description' || key === 'Suggested Correction') {
+          if (val) {
+            td.classList.add('invalid-cell');
+            previewHasErrors = true;
+          }
+        }
+
+        tr.appendChild(td);
+      });
+      previewTable.appendChild(tr);
+    });
+
+    previewSection.classList.remove('hidden');
+  };
+  reader.readAsArrayBuffer(file);
+}
