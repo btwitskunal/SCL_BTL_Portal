@@ -327,8 +327,3 @@ html, body {
   max-width: 90%;
   margin: auto;
 }
-#uploadTable {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
