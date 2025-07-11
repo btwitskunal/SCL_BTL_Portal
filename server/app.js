@@ -4,13 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const XLSX = require('xlsx');
 const mysql = require('mysql2');
-const generateTemplate = require('./template-generator');
-const mappings = require('./mappings.json');
+const generateTemplate = require('./generateMappings.js');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
-
-generateTemplate(); // generate template on startup
 
 // MySQL connection
 const db = mysql.createPool({
@@ -24,20 +21,22 @@ const db = mysql.createPool({
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json());
 
-// Routes
+// Generate template on startup
+generateTemplate();
 
-// Download latest Excel template
+//  Download latest Excel template
 app.get('/template', (req, res) => {
   generateTemplate();
   res.download(path.join(__dirname, '../public/template.xlsx'));
 });
 
-// Metadata for client-side validation
+// 📊 Metadata for client-side validation
 app.get('/metadata', (req, res) => {
+  const mappings = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/mappings.json'), 'utf-8'));
   res.json(mappings);
 });
 
-// Admin API to fetch uploaded records
+// 📁 Admin API to fetch uploaded records
 app.get('/admin/uploads', (req, res) => {
   db.query('SELECT * FROM uploads ORDER BY uploaded_at DESC', (err, results) => {
     if (err) return res.status(500).json({ message: 'Database error.', error: err });
@@ -45,13 +44,22 @@ app.get('/admin/uploads', (req, res) => {
   });
 });
 
-// Upload Excel file
+// 📤 Upload Excel file
 app.post('/upload', upload.single('excelFile'), (req, res) => {
   try {
     const filePath = req.file.path;
+
+    // Read uploaded Excel file
     const workbook = XLSX.readFile(filePath);
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const data = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+    // Save uploaded file as template and regenerate mappings
+    fs.writeFileSync(path.join(__dirname, '../public/template.xlsx'), XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' }));
+    require('./generateMappings.js')(); // Regenerate mappings.json
+
+    // Reload latest mappings
+    const mappings = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/mappings.json'), 'utf-8'));
 
     const validRows = [];
     const errorRows = [];
@@ -98,7 +106,7 @@ app.post('/upload', upload.single('excelFile'), (req, res) => {
 
     fs.unlinkSync(filePath);
 
-    // If errors, generate report
+    // Generate error report if needed
     if (errorRows.length > 0) {
       const errorWb = XLSX.utils.book_new();
       const errorSheet = XLSX.utils.json_to_sheet(errorRows);
@@ -135,6 +143,6 @@ app.post('/upload', upload.single('excelFile'), (req, res) => {
   }
 });
 
-// Start server
+// 🚀 Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));

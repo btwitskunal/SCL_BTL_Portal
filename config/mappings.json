@@ -1,0 +1,44 @@
+{
+  "Shop Sign": {
+    "uom": "Sqft",
+    "attributes": [
+      "GSB, NLB, ACP, Shop Hording"
+    ]
+  },
+  "POP / Give Away": {
+    "uom": "No",
+    "attributes": [
+      "Cap, Key Chain, Pad, Pen, Other"
+    ]
+  },
+  "Shop Painting": {
+    "uom": "Sqft",
+    "attributes": [
+      "(Optional or None)"
+    ]
+  },
+  "In Shop Branding": {
+    "uom": "Sqft",
+    "attributes": [
+      "(Optional or None)"
+    ]
+  },
+  "Contractor Meet": {
+    "uom": "No",
+    "attributes": [
+      "(Optional or None)"
+    ]
+  },
+  "Van Activity": {
+    "uom": "No",
+    "attributes": [
+      "(Optional or None)"
+    ]
+  },
+  "Other Marketing Activity": {
+    "uom": "No",
+    "attributes": [
+      "(Optional or None)"
+    ]
+  }
+}
